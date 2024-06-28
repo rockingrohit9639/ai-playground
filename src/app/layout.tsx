@@ -1,6 +1,7 @@
 import "~/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
+import Link from "next/link";
 
 export const metadata = {
   title: "Create T3 App",
@@ -17,6 +18,10 @@ export default function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         <div className="md:border-border mx-auto h-screen w-full max-w-screen-lg overflow-hidden px-4 py-6 md:border-x">
+          <Link href="/" className="border-border mb-4 block border-b pb-2">
+            Home
+          </Link>
+
           {children}
         </div>
       </body>
