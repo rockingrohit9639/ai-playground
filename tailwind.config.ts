@@ -11,6 +11,10 @@ export default {
       },
       colors: {
         background: colors.zinc["950"],
+        primary: {
+          DEFAULT: colors.white,
+          foreground: colors.black,
+        },
         dark: colors.black,
         foreground: colors.white,
         muted: {
