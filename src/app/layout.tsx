@@ -15,7 +15,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <body>{children}</body>
+      <body>
+        <div className="md:border-border mx-auto h-screen w-full max-w-screen-lg overflow-hidden px-4 py-6 md:border-x">
+          {children}
+        </div>
+      </body>
     </html>
   );
 }
