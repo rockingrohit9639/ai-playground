@@ -61,6 +61,20 @@ const INDEX: Index[] = [
       },
     ],
   },
+  {
+    title: "State Management",
+    to: "/state-management/ai-and-ui-states",
+    children: [
+      {
+        title: "AI and UI States",
+        to: "/state-management/ai-and-ui-states",
+      },
+      {
+        title: "Save and Restore States",
+        to: "/state-management/save-and-restore-states",
+      },
+    ],
+  },
 ];
 
 export default function HomePage() {
