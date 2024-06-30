@@ -43,6 +43,24 @@ const INDEX: Index[] = [
       },
     ],
   },
+  {
+    title: "Tools",
+    to: "/tools/call-tool",
+    children: [
+      {
+        title: "Call Tools",
+        to: "/tools/call-tool",
+      },
+      {
+        title: "Call tools in parallel",
+        to: "/tools/call-tools-in-parallel",
+      },
+      {
+        title: "Render interface during Tool Calls",
+        to: "/tools/render-interface-during-tool-calls",
+      },
+    ],
+  },
 ];
 
 export default function HomePage() {

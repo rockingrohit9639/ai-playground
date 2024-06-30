@@ -1,41 +1,32 @@
 "use client";
 
-import { useState } from "react";
 import Chat from "~/components/chat";
 import { continueConversation, type Message } from "./action";
-import { readStreamableValue } from "ai/rsc";
+import { useState } from "react";
 
 // Force the page to be dynamic and allow streaming responses up to 30 seconds
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
 
-export default function StreamChatCompletion() {
+export default function CallTool() {
   const [conversation, setConversation] = useState<Message[]>([]);
 
   return (
     <Chat
       onSubmit={async (e) => {
         e.preventDefault();
+
         const message = String(new FormData(e.currentTarget).get("message"));
 
-        const { messages, newMessage } = await continueConversation([
+        const { messages } = await continueConversation([
           ...conversation,
           { role: "user", content: message },
         ]);
 
-        let textContent = "";
-
-        for await (const delta of readStreamableValue(newMessage)) {
-          textContent = `${textContent}${delta}`;
-
-          setConversation([
-            ...messages,
-            { role: "assistant", content: textContent },
-          ]);
-        }
+        setConversation(messages);
       }}
     >
-      <h1 className="mb-2 text-2xl font-bold">Stream chat completion</h1>
+      <h1 className="mb-2 text-2xl font-bold">Call Tool</h1>
 
       <div>
         {conversation.map((message, index) => (
