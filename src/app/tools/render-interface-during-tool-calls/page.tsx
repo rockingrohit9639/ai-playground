@@ -8,7 +8,7 @@ import { useState } from "react";
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
 
-export default function CallToolInParallel() {
+export default function RenderInterfaceDuringToolCalls() {
   const [conversation, setConversation] = useState<Message[]>([]);
 
   return (
@@ -26,12 +26,15 @@ export default function CallToolInParallel() {
         setConversation(messages);
       }}
     >
-      <h1 className="mb-2 text-2xl font-bold">Call Tools in Parallel</h1>
+      <h1 className="mb-2 text-2xl font-bold">
+        Render interface during tool calls
+      </h1>
 
       <div>
         {conversation.map((message, index) => (
           <div key={index}>
             {message.role}: {message.content}
+            {message.display}
           </div>
         ))}
       </div>
