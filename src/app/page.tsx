@@ -29,6 +29,20 @@ const INDEX: Index[] = [
       },
     ],
   },
+  {
+    title: "Chat",
+    to: "/chat/generate-chat-completion",
+    children: [
+      {
+        title: "Generate chat completion",
+        to: "/chat/generate-chat-completion",
+      },
+      {
+        title: "Stream chat completion",
+        to: "/chat/stream-chat-completion",
+      },
+    ],
+  },
 ];
 
 export default function HomePage() {
@@ -37,13 +51,13 @@ export default function HomePage() {
       <h1 className="mb-8 text-2xl font-bold">AI Playground (Index)</h1>
 
       {INDEX.map((index) => (
-        <div key={index.to}>
+        <div key={index.to} className="mb-4">
           <Link className="mb-4 text-xl" href={index.to}>
             {index.title}
           </Link>
 
           {index.children?.length ? (
-            <ul className="border-border ml-2 border-l pl-2">
+            <ul className="ml-2 border-l border-border pl-2">
               {index.children.map((childIndex) => (
                 <li key={childIndex.to}>
                   <Link href={childIndex.to} className="text-sm">

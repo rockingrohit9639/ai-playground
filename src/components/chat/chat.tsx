@@ -19,10 +19,14 @@ export default function Chat({
       {children}
 
       <form
-        className="absolute bottom-0 left-1/2 -translate-x-1/2"
+        className="absolute bottom-4 left-1/2 -translate-x-1/2"
         onSubmit={onSubmit}
       >
-        <input className="border-border w-full min-w-96 border bg-transparent px-4 py-2 outline-none" />
+        <input
+          className="w-full min-w-96 border border-border bg-transparent px-4 py-2 outline-none"
+          name="message"
+          placeholder="enter your message"
+        />
       </form>
     </div>
   );
