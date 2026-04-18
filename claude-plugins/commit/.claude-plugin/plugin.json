@@ -1,0 +1,9 @@
+{
+  "name": "commit",
+  "description": "Commits current changes using a configurable, structured commit message format.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Rohit Saini",
+    "email": "rohitsaini.codes@gmail.com"
+  }
+}
