@@ -10,7 +10,7 @@
     {
       "name": "commit",
       "description": "Commits current git changes using a configurable, structured commit message format. Supports Conventional Commits, simple single-line, and fully custom templates. Auto-stages changes by default and guides you through writing a good commit message.",
-      "source": "claude-plugins/commit",
+      "source": "./claude-plugins/commit",
       "category": "developer-tools"
     }
   ]
