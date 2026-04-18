@@ -14,8 +14,7 @@ Look for a config file at `.claude/commit-config.json` in the repo root. If it d
 ```json
 {
   "format": "conventional",
-  "auto_stage": true,
-  "scope_required": false
+  "auto_stage": true
 }
 ```
 
@@ -23,8 +22,7 @@ Look for a config file at `.claude/commit-config.json` in the repo root. If it d
 
 - `format`: `"conventional"` | `"simple"` | `"custom"` — commit message style (see formats below)
 - `auto_stage`: `true` | `false` — whether to run `git add .` before committing
-- `scope_required`: `true` | `false` — whether to always include a scope in the message
-- `custom_template`: (only when `format: "custom"`) — a string template, e.g. `"[{type}] {subject}"` or `"{emoji} {subject}"`
+- `custom_template`: (only when `format: "custom"`) — a string template, e.g. `"[{type}] {subject}"` or `"{emoji} {subject}"`. Include `{scope}` in the template only if you want scope in your messages.
 
 ## Step 2: Check git status
 
@@ -54,7 +52,7 @@ Use the configured format:
 ```
 
 - **type**: `feat` | `fix` | `docs` | `style` | `refactor` | `perf` | `test` | `chore`
-- **scope**: optional (or required if `scope_required: true`) — the area affected, e.g. `auth`, `api`
+- **scope**: inferred from the diff (e.g. the module, directory, or feature area affected) — omit if the change is too broad to scope
 - **subject**: imperative, lowercase, no period, max 50 chars
 - **body**: optional, explains the _why_, wrap at 72 chars
 
