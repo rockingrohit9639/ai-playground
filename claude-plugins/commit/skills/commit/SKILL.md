@@ -1,6 +1,7 @@
 ---
 name: commit
 description: Commits current git changes with a structured, user-configurable commit message format. Use this skill whenever the user wants to commit changes, stage and commit, or write a git commit message — even if they just say "commit my changes", "make a commit", or "commit this". Also use it when the user asks to configure their commit format or preferences.
+allowed-tools: Bash(git add .), Bash(git commit *), Bash(git status *), Bash(git diff *)
 ---
 
 # Commit Skill
