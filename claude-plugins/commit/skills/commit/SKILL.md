@@ -1,7 +1,7 @@
 ---
 name: commit
 description: Commits current git changes with a structured, user-configurable commit message format. Use this skill whenever the user wants to commit changes, stage and commit, or write a git commit message — even if they just say "commit my changes", "make a commit", or "commit this". Also use it when the user asks to configure their commit format or preferences.
-allowed-tools: Bash(git add .), Bash(git commit *), Bash(git status *), Bash(git diff *)
+allowed-tools: Bash(git add .), Bash(git commit *), Bash(git status *), Bash(git diff *), Bash(git push *)
 ---
 
 # Commit Skill
@@ -15,7 +15,8 @@ Look for a config file at `.claude/commit-config.json` in the repo root. If it d
 ```json
 {
   "format": "conventional",
-  "auto_stage": true
+  "auto_stage": true,
+  "auto_push": false
 }
 ```
 
@@ -23,6 +24,7 @@ Look for a config file at `.claude/commit-config.json` in the repo root. If it d
 
 - `format`: `"conventional"` | `"simple"` | `"custom"` — commit message style (see formats below)
 - `auto_stage`: `true` | `false` — whether to run `git add .` before committing
+- `auto_push`: `true` | `false` — whether to run `git push` automatically after a successful commit (default: `false`)
 - `custom_template`: (only when `format: "custom"`) — a string template, e.g. `"[{type}] {subject}"` or `"{emoji} {subject}"`. Include `{scope}` in the template only if you want scope in your messages.
 
 ## Step 2: Check git status
@@ -73,8 +75,8 @@ Use the `custom_template` string from config. Replace `{type}`, `{scope}`, `{sub
 
 Present the proposed commit message to the user clearly, then ask: **"Commit with this message? (yes / edit / cancel)"**
 
-- **yes** → run `git commit -m "..."`
-- **edit** → let the user type their preferred message, then commit with that
+- **yes** → run `git commit -m "..."`, then if `auto_push` is `true`, run `git push`
+- **edit** → let the user type their preferred message, then commit (and push if `auto_push` is `true`)
 - **cancel** → stop, don't commit
 
 ## Step 6: Handle arguments

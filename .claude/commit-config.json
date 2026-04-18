@@ -2,5 +2,6 @@
   "format": "custom",
   "custom_template": "[{type}] {subject}",
   "auto_stage": true,
+  "auto_push": false,
   "scope_required": false
 }
