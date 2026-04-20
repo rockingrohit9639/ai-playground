@@ -1,0 +1,6 @@
+# Personality plugin files — each developer maintains their own locally
+.claude/PERSONALITY.md
+.claude/personality_tally.md
+.claude/personality_archive.md
+.claude/style-draft.md
+.claude/personality.local.md
