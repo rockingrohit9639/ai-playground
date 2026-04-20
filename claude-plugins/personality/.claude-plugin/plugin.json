@@ -1,6 +1,6 @@
 {
   "name": "personality",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Learns your coding style from the delta between Claude's suggestions and what you actually commit, building a transparent PERSONALITY.md that gets silently injected into every prompt.",
   "author": {
     "name": "Rohit Saini"
