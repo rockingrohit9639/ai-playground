@@ -14,6 +14,7 @@ Plugins live under `claude-plugins/<name>/`. Each has a `.claude-plugin/plugin.j
 | Plugin                              | Description                                                                                                  |
 | ----------------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | [`commit`](./claude-plugins/commit) | Structured git commits with configurable message formats (Conventional Commits, simple, or custom templates) |
+| [`personality`](./claude-plugins/personality) | Learns your coding style from the delta between Claude's suggestions and what you actually commit — builds a transparent, editable `PERSONALITY.md` that gets silently injected into every prompt |
 
 ### Installing plugins from this marketplace
 
