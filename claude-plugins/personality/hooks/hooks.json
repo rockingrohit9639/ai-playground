@@ -6,9 +6,9 @@
         "matcher": "Write|Edit",
         "hooks": [
           {
-            "type": "prompt",
-            "prompt": "A file was just written or edited by Claude. The tool input is: $TOOL_INPUT\n\nAppend an entry to `.claude/style-draft.md` (create it if it doesn't exist) recording what Claude wrote. Use this format:\n\n## File: <file_path from tool input>\n\nFor Write tool: record the full `content` field.\nFor Edit tool: record the `old_string` and `new_string` fields so deviations can be detected.\n\n```\n<content here>\n```\n\n---\n\nIf the file already has an entry for this path in the current session, replace it with the latest version. Do not output anything to the user — this is a silent background operation.",
-            "timeout": 15
+            "type": "command",
+            "command": "bash $CLAUDE_PLUGIN_ROOT/hooks/scripts/capture-draft.sh",
+            "timeout": 10
           }
         ]
       },
@@ -16,9 +16,9 @@
         "matcher": "Bash",
         "hooks": [
           {
-            "type": "prompt",
-            "prompt": "A bash command just completed. Check if the command in $TOOL_INPUT.command contains 'git commit'. If it does NOT contain 'git commit', output nothing and stop. If it does contain 'git commit' AND the exit code was 0 (success), then: invoke the style-analyzer agent to analyze the style deviations from this commit. The agent will handle everything — do not output anything to the user about this process.",
-            "timeout": 60
+            "type": "command",
+            "command": "bash $CLAUDE_PLUGIN_ROOT/hooks/scripts/trigger-analysis.sh",
+            "timeout": 10
           }
         ]
       }
@@ -28,9 +28,9 @@
         "matcher": "*",
         "hooks": [
           {
-            "type": "prompt",
-            "prompt": "Before processing the user's prompt, check if `.claude/PERSONALITY.md` exists in the current project directory.\n\nIf it does NOT exist: initialize the personality system by creating these files with placeholder content:\n\n`.claude/PERSONALITY.md`:\n```\n# Developer Personality\n\n<!-- Rules will appear here as patterns are detected from your commits -->\n```\n\n`.claude/personality_tally.md`:\n```\n# Style Tally\n\n| Rule | Count |\n|------|-------|\n```\n\n`.claude/personality_archive.md`:\n```\n# Personality Archive\n\n<!-- Superseded rules are recorded here -->\n```\n\n`.claude/style-draft.md` (empty file)\n\n`.claude/personality.local.md`:\n```\n---\nthreshold: 5\n---\n\n# Personality Plugin Config\n\nEdit `threshold` above to change how many deviations are needed before a rule is promoted to PERSONALITY.md.\n```\n\nIf PERSONALITY.md DOES exist and has content beyond the placeholder comment: prepend its full contents as a system context message to Claude with this framing: \"The following are this developer's coding style preferences learned from past commits. Apply them to all code suggestions:\"\n\nIf PERSONALITY.md exists but contains only the placeholder comment (no actual rules yet): do nothing — don't inject empty context.\n\nThis is a silent background operation. Do not mention it to the user.",
-            "timeout": 15
+            "type": "command",
+            "command": "bash $CLAUDE_PLUGIN_ROOT/hooks/scripts/inject-personality.sh",
+            "timeout": 10
           }
         ]
       }
