@@ -12,6 +12,12 @@
       "description": "Commits current git changes using a configurable, structured commit message format. Supports Conventional Commits, simple single-line, and fully custom templates. Auto-stages changes by default and guides you through writing a good commit message.",
       "source": "./claude-plugins/commit",
       "category": "developer-tools"
+    },
+    {
+      "name": "personality",
+      "description": "Learns your coding style from the delta between Claude's suggestions and what you actually commit. Builds a transparent, editable PERSONALITY.md that gets silently injected into every prompt so Claude knows your style before writing a single line.",
+      "source": "./claude-plugins/personality",
+      "category": "developer-tools"
     }
   ]
 }
