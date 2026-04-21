@@ -1,6 +1,18 @@
 {
-  "description": "Captures Claude's edits, triggers style analysis on commit, and injects PERSONALITY.md into every prompt",
+  "description": "Captures Claude's edits, triggers style analysis after commits, and injects PERSONALITY.md into every prompt",
   "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash $CLAUDE_PLUGIN_ROOT/hooks/scripts/install-git-hook.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit",
@@ -8,16 +20,6 @@
           {
             "type": "command",
             "command": "bash $CLAUDE_PLUGIN_ROOT/hooks/scripts/capture-draft.sh",
-            "timeout": 10
-          }
-        ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash $CLAUDE_PLUGIN_ROOT/hooks/scripts/trigger-analysis.sh",
             "timeout": 10
           }
         ]
