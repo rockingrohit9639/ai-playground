@@ -18,6 +18,12 @@
       "description": "Learns your coding style from the delta between Claude's suggestions and what you actually commit. Builds a transparent, editable PERSONALITY.md that gets silently injected into every prompt so Claude knows your style before writing a single line.",
       "source": "./claude-plugins/personality",
       "category": "developer-tools"
+    },
+    {
+      "name": "brainstorm",
+      "description": "A brainstorming and idea refinement skill — like a brilliant, curious friend who helps you think things through. Asks sharp questions, brings examples, challenges assumptions, and lands on a concrete concept with an honest recommendation.",
+      "source": "./claude-plugins/brainstorm",
+      "category": "productivity"
     }
   ]
 }
