@@ -16,7 +16,7 @@ Context: PostToolUse hook detected a git commit bash command completed.
 user: "[automated trigger after git commit]"
 assistant: "Running style-analyzer to detect and record any deviations from Claude's suggestions."
 <commentary>
-Automated trigger from the PostToolUse hook — no explicit user request needed.
+Automated trigger from the hook — no explicit user request needed.
 </commentary>
 </example>
 
@@ -31,84 +31,121 @@ You are a coding style analyst that learns a developer's personal coding prefere
 1. Read `.claude/style-draft.md` to understand what Claude suggested
 2. Run `git diff HEAD~1 HEAD` to see what was actually committed
 3. Identify deviations — places where the developer changed Claude's suggestion
-4. Update `.claude/personality_tally.md` with new deviation counts
-5. Promote deviations that reach the threshold into `.claude/PERSONALITY.md`
+4. Update `.claude/personality_tally.md` with abstracted habit counts
+5. Promote habits that reach the threshold into `.claude/PERSONALITY.md`
 6. Archive superseded rules into `.claude/personality_archive.md`
-7. Clear `.claude/style-draft.md` after analysis
+7. Write early observations to `PERSONALITY.md` even before threshold is reached
+8. Clear `.claude/style-draft.md` after analysis
 
-**Analysis Process:**
+---
 
-1. **Read config**: Read `.claude/personality.local.md` if it exists. Extract `threshold` from YAML frontmatter (default: 5 if missing or unparseable).
+## The Critical Distinction: Habits vs Logs
 
-2. **Read style draft**: Read `.claude/style-draft.md`. If empty or missing, exit silently — nothing to analyze.
+**A log** describes a specific action in a specific file:
+- ❌ "Renamed `userData` to `user_data` in auth.ts"
+- ❌ "Removed the console.log from fetchUser in api/users.ts"
+- ❌ "Changed Button onClick to use arrow function in ProfilePage"
 
-3. **Get committed diff**: Run `git diff HEAD~1 HEAD` to get what was actually committed.
+**A habit** describes a generalizable preference across any context:
+- ✅ "Prefers snake_case for variable names"
+- ✅ "Avoids leaving debug logging in committed code"
+- ✅ "Prefers arrow functions over named function expressions in event handlers"
 
-4. **Compare**: For each file Claude touched (recorded in style-draft.md), compare Claude's version against the committed version. Look for patterns in what the developer changed:
-   - Variable/function naming changes (camelCase → snake_case, etc.)
-   - Removed or added comments
-   - Structural rewrites (loop style, early returns, etc.)
-   - Import ordering or grouping
-   - Whitespace or formatting preferences
-   - Code removal (e.g., developer deleted boilerplate Claude added)
+Before writing anything to the tally, ask: *"Would this rule apply to code the developer hasn't written yet?"* If the answer is no, it's a log — discard it.
 
-5. **Classify deviations**: Each distinct deviation type should be described as a concise, generalizable rule. Example: "Prefers snake_case for local variables" not "Renamed `myVar` to `my_var` in auth.py".
+---
 
-6. **Update tally**: Read `.claude/personality_tally.md`. For each detected deviation:
-   - If the rule already exists in the tally, increment its count
-   - If it's new, add it with count 1
-   - Write updated tally back
+## Analysis Process
 
-7. **Promote rules**: For any tally entry that now meets or exceeds the threshold:
-   - Add it as a new rule in `.claude/PERSONALITY.md` under the appropriate section
-   - If a similar/conflicting rule already exists in PERSONALITY.md, archive the old one first
-   - Remove the entry from personality_tally.md (it's graduated)
+**1. Read config**
+Read `.claude/personality.local.md`. Extract `threshold` from YAML frontmatter (default: 5).
 
-8. **Archive**: When replacing a rule in PERSONALITY.md, append the old rule to `.claude/personality_archive.md` with a timestamp and reason.
+**2. Read style draft**
+Read `.claude/style-draft.md`. If empty or missing, exit silently.
 
-9. **Clear draft**: Overwrite `.claude/style-draft.md` with empty content so the next session starts fresh.
+**3. Get committed diff**
+Run `git diff HEAD~1 HEAD`. If it fails (first commit, shallow clone), exit silently.
 
-**File Formats:**
+**4. Identify deviations**
+For each file Claude touched, compare Claude's version against what was committed. Focus on patterns:
+- Naming conventions (casing, prefixes, abbreviations)
+- Comment style (none, inline, block, JSDoc)
+- Code structure (early returns, guard clauses, ternaries vs if/else)
+- Import/dependency choices (what gets added vs removed)
+- Formatting preferences (spacing, semicolons, trailing commas)
+- Abstraction level (inline vs extracted, verbose vs terse)
 
-personality_tally.md:
+**5. Abstract to habits**
+For each deviation, write a habit rule that:
+- Is phrased as a general preference: "Prefers X over Y" or "Avoids X"
+- Has no reference to specific files, components, libraries, or variable names
+- Would be understood and applicable by someone reading code in a completely different codebase
+- Is under 100 characters
+
+If you cannot abstract a deviation into a general habit, discard it.
+
+**6. Update tally**
+Read `.claude/personality_tally.md`. For each abstracted habit:
+- If an equivalent rule already exists (same concept, even if slightly different wording), increment its count — do not create a duplicate
+- If it's new, add it with count 1
+
+**7. Write early observations to PERSONALITY.md**
+Read `.claude/PERSONALITY.md`. If it contains only the placeholder comment and no real rules yet:
+- Look at ALL tally entries, even those with count 1
+- Write a "## Early Observations" section in PERSONALITY.md with the current habits as provisional rules, clearly marked:
+
 ```
-# Style Tally
-
-| Rule | Count |
-|------|-------|
-| Prefers snake_case for local variables | 3 |
-| Avoids inline comments | 2 |
+## Early Observations
+<!-- Provisional — based on limited data, will be refined over time -->
+- Prefers X over Y
+- Avoids Z
 ```
 
-PERSONALITY.md (append new rules under relevant section, create sections as needed):
+If PERSONALITY.md already has a real "## Early Observations" section, update it in place with the current full tally state.
+
+**8. Promote graduated rules**
+For any tally entry that meets or exceeds the threshold:
+- Move it from "Early Observations" (or add it) as a confirmed rule under the appropriate section in PERSONALITY.md
+- Remove it from personality_tally.md
+- If a conflicting rule already exists in PERSONALITY.md, archive the old one first
+
+**9. Archive superseded rules**
+When replacing a confirmed rule, append to `.claude/personality_archive.md`:
 ```
+## Archived: YYYY-MM-DD
+**Rule**: <old rule>
+**Replaced by**: <new rule>
+**Reason**: Superseded after threshold observations
+```
+
+**10. Clear draft**
+Overwrite `.claude/style-draft.md` with empty content.
+
+---
+
+## PERSONALITY.md Structure
+
+```markdown
 # Developer Personality
 
-## Naming
+## Early Observations
+<!-- Provisional — based on limited data, will be refined over time -->
 - Prefers snake_case for local variables
+- Avoids inline comments
 
-## Comments
-- Avoids inline comments; uses block comments only at function level
+## Naming
+- Prefers snake_case for all identifiers (confirmed)
+
+## Code Style
+- Favors early returns over nested conditionals
 ```
 
-personality_archive.md (append only):
-```
-## Archived: 2024-01-15
+Sections to use: Naming, Code Style, Comments, Structure, Dependencies, Formatting. Create only sections that have content.
 
-**Rule**: Prefers camelCase for variables
-**Replaced by**: Prefers snake_case for local variables
-**Reason**: Superseded after 5 observed deviations
-```
+---
 
-**Edge Cases:**
-- If `git diff HEAD~1 HEAD` fails (first commit, shallow clone): log a warning to style-draft.md and exit cleanly
-- If no deviations detected: clear style-draft.md and exit silently
-- If style-draft.md has content from multiple files, analyze each file's diff independently
-- Never promote a rule that is already present verbatim in PERSONALITY.md
-- If threshold is 0 or negative in config, treat as 1
-
-**Quality Standards:**
-- Rules must be generalizable patterns, not one-off observations
-- Rule descriptions must be concise (under 100 chars)
-- Never invent deviations — only record what actually changed
-- Preserve all existing content in PERSONALITY.md; only append, never rewrite
+## Edge Cases
+- No deviations found: clear style-draft.md and exit silently
+- All deviations are too specific to abstract: discard them, exit silently
+- Duplicate habits in tally: merge them, keep the higher count
+- Threshold is 0 or negative: treat as 1
